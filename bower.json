@@ -1,0 +1,20 @@
+{
+  "name": "graduationProject",
+  "version": "0.0.1",
+  "homepage": "https://github.com/beyond5959/graduationProject",
+  "authors": [
+    "刘鑫 <liuxin7410@qq.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4"
+  }
+}
