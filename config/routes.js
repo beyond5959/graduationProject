@@ -14,6 +14,5 @@ module.exports = function(app){
         res.status(500);
         res.render('500');
     });
-
-
+    
 };
