@@ -29,8 +29,7 @@
     "express-session": "^1.11.1",
     "express3-handlebars": "^0.5.2",
     "morgan": "^1.5.2",
-    "mysql": "^2.6.2",
-    "uuid": "^2.0.1"
+    "mysql": "^2.6.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

@@ -6,6 +6,7 @@ module.exports = function(app){
     app.get('/', User.signinRequired, Index.index);
 
     app.get('/signin', User.signin);
+    app.get('/signup', User.signup);
 
 
     app.use(function(req, res){
