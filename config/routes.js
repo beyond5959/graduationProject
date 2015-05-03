@@ -7,6 +7,8 @@ module.exports = function(app){
 
     app.get('/signin', User.signin);
     app.get('/signup', User.signup);
+    app.post('/signin', User.signin);
+    app.post('/signup', User.signup);
 
 
     app.use(function(req, res){

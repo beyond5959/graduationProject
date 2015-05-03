@@ -1,20 +1,20 @@
 <div class="container">
     <div class="row">
-        <h2 class="text-center">美业管理系统</h2>
+        <h2 class="text-center">Manage System</h2>
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-primary">
                 <div class="panel-heading text-center"><strong>用户注册</strong></div>
                 <div class="panel-body">
-                    <form name="form" class="form-validation">
-                        <div class="text-danger wrapper text-center" ng-show="authError">
+                    <form name="form" class="form-validation" method="post">
+                        <div class="text-danger wrapper text-center" ng-show="signupError">
                             {{authError}}
                         </div>
                         <div class="list-group list-group-sm">
                             <div class="list-group-item">
-                                <input type="tel" placeholder="手机号" class="form-control no-border" required>
+                                <input type="tel" placeholder="手机号" name="phoneMobile" maxlength="11" class="form-control no-border" required>
                             </div>
                             <div class="list-group-item">
-                                <input type="password" placeholder="密码" class="form-control no-border" required>
+                                <input type="password" placeholder="密码" name="password" class="form-control no-border" required>
                             </div>
                             <div class="list-group-item">
                                 <input type="password" placeholder="重复密码" class="form-control no-border" required>
