@@ -1,0 +1,50 @@
+{{#section 'head'}}
+    <style>
+        body{
+            padding-top: 70px;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+        .btn-file{
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-file input[type=file]{
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 999px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: #ffffff;
+            cursor: inherit;
+            display: block;
+        }
+    </style>
+{{/section}}
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">XXXXX管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">收银</a></li>
+                <li><a>预约</a></li>
+                <li><a>会员</a></li>
+                <li><a href="/manageCenter">管理台</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Hello! niuniu. <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

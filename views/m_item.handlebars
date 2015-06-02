@@ -1,0 +1,183 @@
+{{> nav}}
+<div ng-controller="mitemCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        管理台 > 经营项目管理
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-cate">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        添加一个项目类别
+                    </button>
+                    <hr />
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        {{#each cates}}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading{{@index}}">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{@index}}" aria-expanded="false" aria-controls="collapse{{@index}}">
+                                        <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                                        {{name}}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{@index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{@index}}">
+                                <div class="panel-body">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-item" ng-click="sendId('{{id}}','{{name}}')">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        添加项目
+                                    </button>
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target=".update-cate" ng-click="sendId('{{id}}','{{name}}')">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                        编辑本类别
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".del-cate" ng-click="sendId('{{id}}','{{name}}')">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        删除本类别
+                                    </button>
+                                </div>
+                                <div class="panel-body">
+
+                                </div>
+
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-cate" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加项目类别</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">类别名称：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cateData.newCate">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addCate()" ng-disabled="cateData.newCate?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade update-cate" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑本类别</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">类别名称：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cateData.updateCate.name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="updateCate()" ng-disabled="cateData.updateCate?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade del-cate" arid-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除类别</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <p>确定删除<span class="delCateName text-danger"></span>？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="deleteCate()">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-item" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加项目</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">项目名称：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cateData.addItem.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">项目价格：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cateData.addItem.price">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="btn btn-success btn-file">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span class="text-left">上传图片</span>
+                            <input type="file" class="form-control" accept="image/*" id="fieldPhoto" data-url="/upload" multiple name="photo">
+                        </span>
+                    </div>
+                    <div class="input-group uploads"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addItem()" ng-disabled="(cateData.addItem.name&&cateData.addItem.price)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{{#section 'foot'}}
+    <script src="/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="/libs/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="/libs/jquery-file-upload/js/jquery.fileupload.js"></script>
+    <script src="/js/m_item.js"></script>
+{{/section}}

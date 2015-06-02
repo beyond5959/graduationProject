@@ -1,5 +1,5 @@
 exports.index = index;
 
-function index(req, res){
+function index(req, res, next){
     res.render('index');
 }

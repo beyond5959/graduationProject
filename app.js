@@ -23,6 +23,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({secret: "liuxin"}));
+app.use(require('cors')());
 
 app.listen(app.get('port'));
 
