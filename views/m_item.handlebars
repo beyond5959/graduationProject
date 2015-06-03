@@ -42,7 +42,29 @@
                                     </button>
                                 </div>
                                 <div class="panel-body">
-
+                                    {{#if hasItems}}
+                                        {{#each hasItems}}
+                                            <div class="col-md-3">
+                                                <div class="thumbnail">
+                                                    <a>
+                                                        <img src="{{pic_url}}" style="height:250px;width:230px;">
+                                                    </a>
+                                                    <div class="caption">
+                                                        <h4>{{name}}</h4>
+                                                        <p>价格：￥{{price}}</p>
+                                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target=".update-item" ng-click="translate('{{id}}','{{name}}','{{price}}')">
+                                                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                                            编辑
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".del-item" ng-click="translate('{{id}}','{{name}}','{{price}}')">
+                                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                            删除
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    {{/if}}
                                 </div>
 
                             </div>
@@ -166,6 +188,72 @@
                         取消
                     </button>
                     <button type="button" class="btn btn-primary" ng-click="addItem()" ng-disabled="(cateData.addItem.name&&cateData.addItem.price)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade update-item" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑项目</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">项目名称：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">项目价格：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.price">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="updateItem()" ng-disabled="(itemData.name&&itemData.price)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade del-item" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除项目</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h4 class="text-center">确定删除以下项目？</h4>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">项目名称：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.name" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">项目价格：</span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.price" readonly>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="deleteItem()" ng-disabled="(itemData.name&&itemData.price)?false:true">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                         确认
                     </button>

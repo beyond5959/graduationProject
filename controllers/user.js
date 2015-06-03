@@ -49,10 +49,16 @@ function signup(req, res, next){
 
         function _encrypt(callback){
             bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-                if (err) return next(err);
+                if (err) {
+                    callback(err);
+                    return;
+                }
 
                 bcrypt.hash(password, salt, function(err, hash) {
-                    if (err) return next(err);
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
 
                     password = hash;
                     callback(null);
@@ -61,7 +67,11 @@ function signup(req, res, next){
         }
         function _execSql(callback){
             dbHelper.execSql(sql,{id:id, username:username, password:password, signup_time:signup_time}, function(err,data){
-                if(err) return next(err);
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
                 callback(null, data);
             });
         }

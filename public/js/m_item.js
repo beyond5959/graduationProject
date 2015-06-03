@@ -14,6 +14,11 @@ app.controller("mitemCtrl", function($scope,$http){
             picUrl:""
         }
     };
+    $scope.itemData = {
+        id:"",
+        name:"",
+        price:""
+    };
 
     function reload(modalName){
         window.location.href = window.location.href;
@@ -48,7 +53,40 @@ app.controller("mitemCtrl", function($scope,$http){
 
     $scope.addItem = function(){
         var picUrl = $("#itemUrl").val();
-        
+        var options = {
+            itemName: $scope.cateData.addItem.name,
+            itemPrice: $scope.cateData.addItem.price,
+            picUrl: picUrl,
+            serviceId: $scope.cateData.updateCate.id,
+            serviceName: $scope.cateData.updateCate.name
+        };
+        $http.post("/manageCenter/addItem",options).success(function(data){
+            reload("add-item");
+        });
+
+    };
+
+    $scope.translate = function(itemId, itemName, itemPrice){
+        $scope.itemData.name = itemName;
+        $scope.itemData.id = itemId;
+        $scope.itemData.price = itemPrice;
+    };
+
+    $scope.updateItem = function(){
+        var options = {
+            id: $scope.itemData.id,
+            name: $scope.itemData.name,
+            price: $scope.itemData.price
+        };
+        $http.post("/manageCenter/updateItem", options).success(function(data){
+            reload("update-item");
+        });
+    };
+
+    $scope.deleteItem = function(){
+        $http.get("/manageCenter/deleteItem/" + $scope.itemData.id).success(function(data){
+            reload("del-item");
+        });
     };
 
     $("#fieldPhoto").fileupload({

@@ -12,6 +12,18 @@ module.exports = function(app){
     app.get('/manageCenter/addCate/:newCate', Manager.addNewCate);
     app.post('/manageCenter/updateCate', Manager.updateCate);
     app.get('/manageCenter/deleteCate/:id', Manager.deleteCate);
+    app.post('/manageCenter/addItem', Manager.addItem);
+    app.post('/manageCenter/updateItem', Manager.updateItem);
+    app.get('/manageCenter/deleteItem/:id', Manager.deleteItem);
+    app.get('/manageCenter/staffManagement', Manager.staffManagement);
+    app.post('/manageCenter/addStaff', Manager.addStaff);
+    app.post('/manageCenter/updateStaff', Manager.updateStaff);
+    app.get('/manageCenter/deleteStaff/:id', Manager.deleteStaff);
+    app.get('/manageCenter/cardManagement', Manager.cardManagement);
+    app.post('/manageCenter/addCard', Manager.addCard);
+    app.get('/manageCenter/deleteCard/:id', Manager.deleteCard);
+    app.post('/manageCenter/updateCard', Manager.updateCard);
+
 
     app.get('/signin', User.signin);
     app.get('/signup', User.signup);
@@ -25,7 +37,7 @@ module.exports = function(app){
                 return __dirname + '/../public/uploads/' + now;
             },
             uploadUrl: function(){
-                return '/Users/niuniu/git_local/graduationProject/public/uploads/' + now;
+                return '/uploads/' + now;
             }
         })(req, res, next);
     });

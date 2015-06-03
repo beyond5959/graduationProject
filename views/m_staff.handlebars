@@ -1,0 +1,208 @@
+{{> nav}}
+<div ng-controller="mstaffCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        管理台 > 员工管理
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-staff">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        添加一位员工
+                    </button>
+                    <hr />
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>电话</th>
+                                    <th>性别</th>
+                                    <th>入职时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{#each staffs}}
+                                <tr>
+                                    <td>{{name}}</td>
+                                    <td>{{mobile_phone}}</td>
+                                    <td>{{gender}}</td>
+                                    <td>{{join_time}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target=".update-staff" ng-click="sendInfo('{{id}}','{{name}}','{{mobile_phone}}','{{gender}}','{{datetime}}')">
+                                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                            修改
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".del-staff" ng-click="sendInfo('{{id}}','{{name}}','{{mobile_phone}}','{{gender}}','{{datetime}}')">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            删除
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-staff" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加员工</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="staffData.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+                            电话：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="staffData.mobilePhone">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              性别：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="staffData.gender" value="male"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="staffData.gender" value="female"> 女
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                            入职时间：
+                        </span>
+                        <input type="date" class="form-control" aria-describedby="basic-addon1" ng-model="staffData.joinTime">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addStaff()" ng-disabled="(staffData.gender&&staffData.name&&staffData.mobilePhone)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade update-staff" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑员工</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="staffData.doStaff.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+                            电话：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="staffData.doStaff.mobilePhone">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              性别：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="staffData.doStaff.gender" value="male"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="staffData.doStaff.gender" value="female"> 女
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                            入职时间：
+                        </span>
+                        <input type="date" class="form-control" aria-describedby="basic-addon1" ng-model="staffData.doStaff.joinTime">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="updateStaff()" ng-disabled="(staffData.doStaff.name&&staffData.doStaff.mobilePhone)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade del-staff" arid-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除员工</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h4 class="text-center">确定删除<span id="staff_name" class="text-danger"></span>?</h4>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="deleteStaff()">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{#section 'foot'}}
+    <script src="/js/m_staff.js"></script>
+{{/section}}

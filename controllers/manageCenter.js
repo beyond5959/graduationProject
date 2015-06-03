@@ -1,12 +1,25 @@
 var dbHelper = require('../lib/dbHelper.js');
 var dbDAO = require('../lib/dbDAO.js');
 var uuid = require('uuid');
+var async = require('async');
+var _ = require('underscore');
 
 exports.init = init;
 exports.itemManagement = itemManagement;
 exports.addNewCate = addNewCate;
 exports.updateCate = updateCate;
 exports.deleteCate = deleteCate;
+exports.addItem = addItem;
+exports.updateItem = updateItem;
+exports.deleteItem = deleteItem;
+exports.staffManagement = staffManagement;
+exports.addStaff = addStaff;
+exports.updateStaff = updateStaff;
+exports.deleteStaff = deleteStaff;
+exports.cardManagement = cardManagement;
+exports.addCard = addCard;
+exports.deleteCard = deleteCard;
+exports.updateCard = updateCard;
 
 function init(req, res, next){
     res.render('manager');
@@ -14,10 +27,40 @@ function init(req, res, next){
 
 function itemManagement(req, res, next){
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
-    dbDAO.queryAllServices(enterprise_id, function(error, data){
+    async.series([_queryAllServices, _queryAllItems], function(error,result){
         if(error) return next(error);
-        res.render("m_item", {cates:data});
+        var services = result[0];
+        var items = result[1];
+        var newItem = [];
+        _.each(services, function(service,index){
+            newItem = _.filter(items, function(item){
+                return item.service_id == service.id;
+            });
+            services[index].hasItems = newItem;
+        });
+        res.render("m_item", {cates: services});
     });
+    function _queryAllServices(callback){
+        dbDAO.queryAllServices(enterprise_id, function(error, data){
+            if (error) {
+                callback(error);
+                return;
+            }
+
+            callback(null, data);
+        });
+    }
+    function _queryAllItems(callback){
+        dbDAO.queryAllItems(enterprise_id, function(error, data){
+            if (error) {
+                callback(error);
+                return;
+            }
+
+            callback(null, data);
+        });
+    }
+
 }
 
 function addNewCate(req, res, next){
@@ -49,3 +92,168 @@ function deleteCate(req, res, next){
         res.json({code:0,result:{id:id}});
     });
 }
+
+function addItem(req, res, next){
+    var id = uuid.v1();
+    var itemName = req.body.itemName;
+    var itemPrice = req.body.itemPrice;
+    var picUrl = req.body.picUrl;
+    var serviceName = req.body.serviceName;
+    var serviceId = req.body.serviceId;
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "insert into items set ?";
+    var options = {
+        id: id,
+        name: itemName,
+        price: itemPrice,
+        pic_url: picUrl,
+        service_id: serviceId,
+        service_name: serviceName,
+        enterprise_id: enterprise_id
+    };
+    dbHelper.execSql(sql, options, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function updateItem(req, res, next){
+    var id = req.body.id;
+    var name = req.body.name;
+    var price = req.body.price;
+    var sql = "update items set name=?, price=? where id=?";
+    dbHelper.execSql(sql, [name, price, id], function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function deleteItem(req, res, next){
+    var id = req.params['id'];
+    var sql = 'delete from items where ?';
+    dbHelper.execSql(sql, {id:id}, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    })
+}
+
+function staffManagement(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    dbDAO.queryAllStaff(enterprise_id, function(err, data){
+        if(err) return next(err);
+        _.each(data, function(d){
+            d.datetime = new Date(d.join_time);
+            d.join_time = new Date(parseInt(d.join_time)).toLocaleString().substr(0,10);
+        });
+        res.render("m_staff", {staffs: data});
+    });
+}
+
+function addStaff(req, res, next){
+    var id = uuid.v1();
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var name = req.body.name;
+    var gender = (req.body.gender=="male")?"男":"女";
+    var mobilePhone = req.body.mobilePhone;
+    var joinTime = req.body.joinTime;
+    var sql = "insert into staff set ?";
+    dbHelper.execSql(sql, {id:id, name:name, mobile_phone:mobilePhone, gender:gender, join_time:joinTime, enterprise_id:enterprise_id}, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function updateStaff(req, res, next){
+    var id = req.body.id;
+    var name = req.body.name;
+    var gender = (req.body.gender=="male")?"男":"女";
+    var mobilePhone = req.body.mobilePhone;
+    var joinTime = req.body.joinTime;
+    var sql = "update staff set name=?,mobile_phone=?,gender=?,join_time=? where id=?";
+    dbHelper.execSql(sql, [name, mobilePhone, gender, joinTime, id], function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function deleteStaff(req, res, next){
+    var id = req.params["id"];
+    var sql = "delete from staff where ?";
+    dbHelper.execSql(sql, {id:id}, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function cardManagement(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    dbDAO.queryAllCards(enterprise_id, function(err, data){
+        if(err) return next(err);
+        _.each(data, function(d){
+            d.datetime = new Date(d.expire_time);
+            d.expire_time = new Date(parseInt(d.expire_time)).toLocaleString().substr(0,10);
+        });
+        res.render("m_card", {cards: data});
+    });
+}
+
+function addCard(req, res, next){
+    var id = uuid.v1();
+    var name = req.body.name;
+    var price = req.body.price;
+    var discount = req.body.discount;
+    var expire_time = Date.parse(req.body.expireTime);
+    var card_type = req.body.cardType;
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "insert into cards set ?";
+    var options = {
+        id: id,
+        name: name,
+        discount: discount,
+        card_type: card_type,
+        price: price,
+        expire_time: expire_time,
+        enterprise_id: enterprise_id
+    };
+    dbHelper.execSql(sql, options, function(err,data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+
+}
+
+function deleteCard(req, res, next){
+    var id = req.params["id"];
+    var sql = "delete from cards where ?";
+    dbHelper.execSql(sql, {id:id}, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function updateCard(req, res, next){
+    var id = req.body.id;
+    var name = req.body.name;
+    var price = req.body.price;
+    var discount = req.body.discount;
+    var expire_time = Date.parse(req.body.expireTime);
+    var card_type = req.body.cardType;
+    var sql = "update cards set name=?,discount=?,card_type=?,price=?,expire_time=? where id=?";
+    dbHelper.execSql(sql, [name,discount,card_type,price,expire_time,id], function(err,data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

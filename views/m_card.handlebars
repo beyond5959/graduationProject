@@ -1,0 +1,204 @@
+{{> nav}}
+<div ng-controller="mcardCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        管理台 > 卡项管理
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-card">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        添加一张卡
+                    </button>
+                    <hr />
+                    {{#each cards}}
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                            <a>
+                                <img alt="100%x200" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjkyLjQ2MDkzNzUiIHk9IjEwMCIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMXB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjI0MngyMDA8L3RleHQ+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="height: 160px; width: 100%; display: block;">
+                            </a>
+                            <div class="caption">
+                                <h4>{{name}}</h4>
+                                <p>价格：￥{{price}}</p>
+                                <p>折扣额度：{{card_type}}</p>
+                                <p>过期时间：{{expire_time}}</p>
+                                <button type="button" class="btn btn-info" data-toggle="modal" data-target=".update-card" ng-click="translate('{{id}}','{{name}}','{{price}}','{{datetime}}','{{discount}}','{{card_type}}')">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    编辑
+                                </button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".del-card" ng-click="translate('{{id}}','{{name}}','{{price}}','{{datetime}}','{{discount}}','{{card_type}}')">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    删除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-card" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加卡项</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            卡名称：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            打折额度：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.cardType" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-click="sendZhekou(0.9,'九折')" href="">九折</a></li>
+                                <li><a ng-click="sendZhekou(0.95, '九五折')" href="">九五折</a></li>
+                                <li><a ng-click="sendZhekou(0.8, '八折')" href="">八折</a></li>
+                                <li><a ng-click="sendZhekou(0.85, '八五折')" href="">八五折</a></li>
+                                <li><a ng-click="sendZhekou(0.7, '七折')" href="">七折</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            价格：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.price">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            过期时间：
+                        </span>
+                        <input type="date" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.expireTime">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addCard()" ng-disabled="!cardData.cardType">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade del-card" arid-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除卡项</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h4 class="text-center">确定删除<span id="card_name" class="text-danger"></span>?</h4>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="deleteCard()">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade update-card" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑卡项</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            卡名称：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.doCard.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            打折额度：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.doCard.cardType" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-click="sendZhekou(0.9,'九折')" href="">九折</a></li>
+                                <li><a ng-click="sendZhekou(0.95, '九五折')" href="">九五折</a></li>
+                                <li><a ng-click="sendZhekou(0.8, '八折')" href="">八折</a></li>
+                                <li><a ng-click="sendZhekou(0.85, '八五折')" href="">八五折</a></li>
+                                <li><a ng-click="sendZhekou(0.7, '七折')" href="">七折</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            价格：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.doCard.price">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            过期时间：
+                        </span>
+                        <input type="date" class="form-control" aria-describedby="basic-addon1" ng-model="cardData.doCard.expireTime">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="updateCard()" ng-disabled="!cardData.doCard.name">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{#section 'foot'}}
+    <script src="/js/m_card.js"></script>
+{{/section}}
