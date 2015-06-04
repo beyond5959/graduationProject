@@ -20,6 +20,10 @@ exports.cardManagement = cardManagement;
 exports.addCard = addCard;
 exports.deleteCard = deleteCard;
 exports.updateCard = updateCard;
+exports.memberManagement = memberManagement;
+exports.addMember = addMember;
+exports.deleteMember = deleteMember;
+exports.updateMember = updateMember;
 
 function init(req, res, next){
     res.render('manager');
@@ -245,7 +249,70 @@ function updateCard(req, res, next){
     });
 }
 
+function memberManagement(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var card_sql = "select * from cards where ?";
+    var member_sql = "select * from members where ?";
+    dbHelper.execSql(card_sql, {enterprise_id: enterprise_id}, function(err, data){
+        if(err) return next(err);
+        dbHelper.execSql(member_sql, {enterprise_id: enterprise_id}, function(error, datas){
+            if(error) return next(error);
+            _.each(datas, function(d){
+                d.datetime = new Date(d.apply_date);
+                d.apply_date = new Date(parseInt(d.apply_date)).toLocaleString().substr(0,10);
+            });
+            res.render("m_member", {cards: data, members: datas});
+        });
+    });
+}
 
+function addMember(req, res, next){
+    var id = uuid.v1();
+    var name = req.body.name;
+    var gender = req.body.gender;
+    var mobilePhone = req.body.mobilePhone;
+    var cardName = req.body.cardName;
+    var applyDate = req.body.applyDate;
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "insert into members set ?";
+    var options = {
+        id: id,
+        name: name,
+        mobile_phone: mobilePhone,
+        gender: gender,
+        card_name: cardName,
+        apply_date: applyDate,
+        consume_count: 0,
+        enterprise_id: enterprise_id
+    };
+    dbHelper.execSql(sql, options, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+
+}
+
+function deleteMember(req, res, next){
+    var id = req.params["id"];
+    var sql = "delete from members where ?";
+    dbHelper.execSql(sql, {id:id}, function(err, data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
+
+function updateMember(req, res, next){
+    var id = req.body.id;
+    var name = req.body.name;
+    var gender = req.body.gender;
+    var mobilePhone = req.body.mobilePhone;
+    var applyDate = req.body.applyDate;
+    var sql = "update members set name=?,gender=?,apply_date=?,mobile_phone=? where id=?";
+    dbHelper.execSql(sql, [name,gender,applyDate,mobilePhone,id], function(err,data){
+        if(err) return next(err);
+        res.json({code:0,result:{msg:"success!"}});
+    });
+}
 
 
 

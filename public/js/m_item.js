@@ -25,6 +25,10 @@ app.controller("mitemCtrl", function($scope,$http){
         $("." + modalName).modal('hide');
     }
 
+    if(location.href.indexOf('manageCenter') != -1){
+        $(".nav li:eq(2)").addClass("active");
+    }
+
     $scope.addCate = function(){
         var cateName = $scope.cateData.newCate;
         $http.get("/manageCenter/addCate/" + cateName).success(function(data){

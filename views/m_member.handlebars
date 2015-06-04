@@ -1,0 +1,240 @@
+{{> nav}}
+<div ng-controller="memberCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        管理台 > 会员管理
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-member">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        添加一位会员
+                    </button>
+                    <hr />
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>电话</th>
+                                <th>性别</th>
+                                <th>办理时间</th>
+                                <th>拥有卡项</th>
+                                <th>消费次数</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each members}}
+                                <tr>
+                                    <td>{{name}}</td>
+                                    <td>{{mobile_phone}}</td>
+                                    <td>{{gender}}</td>
+                                    <td>{{apply_date}}</td>
+                                    <td>{{card_name}}</td>
+                                    <td>{{consume_count}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target=".update-member" ng-click="sendInfo('{{id}}','{{name}}','{{mobile_phone}}','{{gender}}','{{datetime}}','{{card_name}}')">
+                                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                            修改
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target=".del-member" ng-click="sendInfo('{{id}}','{{name}}','{{mobile_phone}}','{{gender}}','{{datetime}}','{{card_name}}')">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            删除
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-member" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加会员</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+                            电话：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.mobilePhone">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              性别：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="memberData.gender" value="男"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="memberData.gender" value="女"> 女
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span>
+                            办理卡项：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.cardName" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                {{#each cards}}
+                                    <li><a ng-click="sendCard('{{id}}', '{{discount}}','{{card_type}}','{{price}}', '{{name}}')" href="">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <span id="money"></span>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                            办理日期：
+                        </span>
+                        <input type="date" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.applyDate">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addMember()" ng-disabled="(memberData.gender&&memberData.name&&memberData.cardName)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade update-member" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">编辑会员</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.doMember.name">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+                            电话：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.doMember.mobilePhone">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              性别：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="memberData.doMember.gender" value="男"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="memberData.doMember.gender" value="女"> 女
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                            拥有卡项：
+                        </span>
+                        <input type="text" readonly class="form-control" aria-describedby="basic-addon1" ng-model="memberData.doMember.cardName">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                            办理时间：
+                        </span>
+                        <input type="date" class="form-control" aria-describedby="basic-addon1" ng-model="memberData.doMember.applyDate">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="updateMember()" ng-disabled="(memberData.doMember.name&&memberData.doMember.mobilePhone)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade del-member" arid-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">删除会员</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h4 class="text-center">确定删除<span id="member_name" class="text-danger"></span>?</h4>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="deleteMember()">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{#section 'foot'}}
+    <script src="/js/m_member.js"></script>
+{{/section}}

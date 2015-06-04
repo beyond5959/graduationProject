@@ -20,6 +20,10 @@ app.controller("mstaffCtrl", function($scope,$http) {
         $("." + modalName).modal('hide');
     }
 
+    if(location.href.indexOf('manageCenter') != -1){
+        $(".nav li:eq(2)").addClass("active");
+    }
+
     $scope.sendInfo = function(id,name,mobiel_phone,gender,join_time){
         $scope.staffData.doStaff.id = id;
         $scope.staffData.doStaff.name = name;

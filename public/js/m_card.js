@@ -21,6 +21,10 @@ app.controller("mcardCtrl", function($scope,$http) {
         $("." + modalName).modal('hide');
     }
 
+    if(location.href.indexOf('manageCenter') != -1){
+        $(".nav li:eq(2)").addClass("active");
+    }
+
     $scope.sendZhekou = function(num, type){
         $scope.cardData.discount = num;
         $scope.cardData.cardType = type;

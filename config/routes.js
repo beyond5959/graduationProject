@@ -23,7 +23,10 @@ module.exports = function(app){
     app.post('/manageCenter/addCard', Manager.addCard);
     app.get('/manageCenter/deleteCard/:id', Manager.deleteCard);
     app.post('/manageCenter/updateCard', Manager.updateCard);
-
+    app.get('/manageCenter/memberManagement', Manager.memberManagement);
+    app.post('/manageCenter/addMember', Manager.addMember);
+    app.get('/manageCenter/deleteMember/:id', Manager.deleteMember);
+    app.post('/manageCenter/updateMember', Manager.updateMember);
 
     app.get('/signin', User.signin);
     app.get('/signup', User.signup);
