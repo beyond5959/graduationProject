@@ -34,4 +34,4 @@ if('development' === app.get('env')){
 }
 
 require('./config/routes')(app);
-console.log('Project started on port' + app.get('port'));
+console.log('Project started on port ' + app.get('port'));

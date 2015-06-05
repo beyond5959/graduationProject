@@ -2,6 +2,8 @@ var Index = require('../controllers/index');
 var User = require('../controllers/user');
 var Manager = require('../controllers/manageCenter');
 var jqupload = require('jquery-file-upload-middleware');
+var Appointment = require('../controllers/appointment');
+
 
 module.exports = function(app){
 
@@ -27,6 +29,12 @@ module.exports = function(app){
     app.post('/manageCenter/addMember', Manager.addMember);
     app.get('/manageCenter/deleteMember/:id', Manager.deleteMember);
     app.post('/manageCenter/updateMember', Manager.updateMember);
+
+    app.get('/appointment', Appointment.init);
+    app.post('/appointment/addAppointment', Appointment.addAppointment);
+    app.get('/appointment/queryAllappointment', Appointment.queryAllappointment);
+    app.get('/appointment/deleteApp/:id', Appointment.deleteApp);
+
 
     app.get('/signin', User.signin);
     app.get('/signup', User.signup);

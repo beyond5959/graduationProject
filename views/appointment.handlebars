@@ -1,0 +1,177 @@
+{{> nav}}
+<div ng-controller="appointmentCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                        预约
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div id='calendar'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-appointment" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加预约</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              顾客类型：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="appData.type" value="散客"> 散客
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="appData.type" value="会员"> 会员
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group" ng-show="appData.type=='散客'">
+                        <span class="input-group-addon">
+                            姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="appData.name">
+                    </div>
+                    <br ng-show="appData.type=='散客'">
+                    <div class="input-group" ng-show="appData.type=='散客'">
+                        <span class="input-group-addon">
+                            电话：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="appData.mobilePhone">
+                    </div>
+                    <div class="input-group" ng-show="appData.type=='会员'">
+                        <span class="input-group-addon">
+                            姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="appData.name" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                {{#each members}}
+                                    <li><a ng-click="sendMember('{{mobile_phone}}','{{name}}')" href="">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <br ng-show="appData.type=='会员'">
+                    <div class="input-group" ng-show="appData.type=='会员'">
+                        <span class="input-group-addon">
+                            电话：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="appData.mobilePhone" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            预约员工：
+                        </span>
+                        <input type="tel" class="form-control" aria-describedby="basic-addon1" ng-model="appData.staff" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                {{#each staffs}}
+                                    <li><a ng-click="sendStaff('{{name}}')" href="">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            开始时间：
+                        </span>
+                        <input type="time" class="form-control" aria-describedby="basic-addon1" ng-model="appData.startTime">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            结束时间：
+                        </span>
+                        <input type="time" class="form-control" aria-describedby="basic-addon1" ng-model="appData.endTime">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addApp()" ng-disabled="(appData.startTime&&appData.mobilePhone&&appData.name)?false:true">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade update-appointment" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">预约详情</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h4 id="title"></h4>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            开始时间：
+                        </span>
+                        <input type="text" class="form-control s_time" aria-describedby="basic-addon1" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            结束时间：
+                        </span>
+                        <input type="text" class="form-control e_time" aria-describedby="basic-addon1" readonly>
+                    </div>
+                    <br>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="appData.doApp.delete"> 删除这条预约
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-danger" ng-disabled="appData.doApp.delete?false:true" ng-click="deleteApp()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        删除
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{{#section 'foot'}}
+    <script src='/libs/moment/min/moment.min.js'></script>
+    <script src='/libs/fullcalendar/dist/fullcalendar.js'></script>
+    <script src='/libs/fullcalendar/dist/lang/zh-cn.js'></script>
+    <script src="/js/appointment.js"></script>
+{{/section}}
