@@ -8,6 +8,8 @@ var Appointment = require('../controllers/appointment');
 module.exports = function(app){
 
     app.get('/', Index.index);  //User.signinRequired,
+    app.get('/index/getItemsByServiceId/:id', Index.getItemsByServiceId);
+    app.post('/index/addJieSuan', Index.addJieSuan);
 
     app.get('/manageCenter', Manager.init);
     app.get('/manageCenter/itemManagement', Manager.itemManagement);

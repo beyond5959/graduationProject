@@ -34,6 +34,11 @@ app.controller("appointmentCtrl", function($scope,$http) {
             $scope.appData.date = date.format();
 
         },
+        eventMouseover: function(date, jsEvent, view){
+            $(this).css('cursor', 'pointer');
+            $(this.parent).css('background-color', 'red');
+
+        },
         events: function(start, end, timezone, callback) {
             $http.get("/appointment/queryAllappointment").success(function(data){
                 var events = [];
@@ -55,7 +60,11 @@ app.controller("appointmentCtrl", function($scope,$http) {
             $("#title").html(calEvent.title);
             $(".update-appointment").modal("show");
         }
-        });
+    });
+
+    $(".fc-day").hover(function(){
+        $(this).css("cursor", "pointer");
+    });
 
     $scope.sendMember = function(phone, name){
         $scope.appData.mobilePhone = phone;

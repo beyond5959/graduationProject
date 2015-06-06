@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var morgan = require('morgan');
+var favicon = require('serve-favicon');
 var handlebars = require('express3-handlebars').create({
     defaultLayout: 'main',
     helpers: {
@@ -20,6 +21,7 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({secret: "liuxin"}));

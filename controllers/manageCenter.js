@@ -273,6 +273,7 @@ function addMember(req, res, next){
     var mobilePhone = req.body.mobilePhone;
     var cardName = req.body.cardName;
     var applyDate = req.body.applyDate;
+    var card_discount = req.body.cardDiscount;
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     var sql = "insert into members set ?";
     var options = {
@@ -281,6 +282,7 @@ function addMember(req, res, next){
         mobile_phone: mobilePhone,
         gender: gender,
         card_name: cardName,
+        card_discount: card_discount,
         apply_date: applyDate,
         consume_count: 0,
         enterprise_id: enterprise_id

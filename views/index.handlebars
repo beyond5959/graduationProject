@@ -1,5 +1,277 @@
 {{> nav}}
-<span>index</span>
+<div ng-controller="indexCtrl">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-jpy" aria-hidden="true"></span>
+                        收银
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="text-center">
+                                    <span id="type">散客</span>
+                                    <div class="btn-group col-md-offset-4">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            选会员 <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {{#each members}}
+                                                <li ng-click="sendMember('{{id}}','{{name}}','{{card_name}}','{{card_discount}}')"><a href="">{{name}}</a></li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                    <button class="btn btn-danger" ng-disabled="itemData.JsItems.length>0?false:true" ng-click="qingkong()">
+                                        清空
+                                    </button>
+                                </h4>
+                            </div>
+                            <div class="panel-body" style="height: 510px;">
+                                <div style="height: 420px;overflow: scroll;">
+                                    <div ng-repeat=" item in itemData.JsItems" class="jsitems">
+                                        <h5 class="col-md-6">
+                                            [[item.name]]
+                                            <span>&nbsp;&nbsp;￥[[item.price]]</span>
+                                        </h5>
+                                        <div class="col-md-6">
+                                            <button class="btn btn-danger pull-right" ng-click="delJsItem([[$index]])">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                删除
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="footer" class="col-md-2">
+                                    <h5 class="col-md-8">共计:<span style="font-size: 20px;">[[itemData.sumMoney]]</span>元</h5>
+                                    <button class="btn btn-success col-md-4 pull-right" ng-click="JieSuan()" ng-disabled="itemData.JsItems.length>0?false:true">
+                                        结算
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 right-content">
+                        <nav class="navbar navbar-default">
+                            <div class="container-fluid">
+                                <div class="collapse navbar-collapse">
+                                    <ul class="nav navbar-nav navbar-left nav-item">
+                                        {{#each cates}}
+                                            <li ng-click="changeNavService('{{id}}', '{{@index}}')"><a href="">{{name}}</a></li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        <div class="container-fluid">
+                            <div class="row" ng-if="!itemData.isShow">
+                            {{#each items}}
+                                <div class="col-md-3">
+                                    <a class="thumbnail" href="" ng-click="addJsItem({'id':'{{id}}','name':'{{name}}','price':'{{price}}'})">
+                                        <img src="{{pic_url}}" style="height:125px;width:115px;">
+                                        <div class="caption">
+                                            <h3>{{name}}</h3>
+                                            <p>价格：￥{{price}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            {{/each}}
+                            </div>
+                            <div class="row" ng-show="itemData.isShow">
+                                <div class="col-md-3" ng-repeat="item in itemData.items">
+                                    <a class="thumbnail" href="" ng-click="addJsItem(item)">
+                                        <img src="[[item.pic_url]]" style="height:125px;width:115px;">
+                                        <div class="caption">
+                                            <h4>[[item.name]]</h4>
+                                            <p>价格：￥[[item.price]]</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade sanke" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">散客结算</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h4 class="text-center">总金额：[[itemData.sumMoney]]元</h4>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            提成员工：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.tc_staff" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                {{#each staffs}}
+                                    <li ng-click="sendStaff('{{id}}','{{name}}')"><a href="">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            提成金额：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.tc">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              支付方式：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="现金"> 现金
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="刷卡"> 刷卡
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="微信"> 微信
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="支付宝"> 支付宝
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group" ng-if="itemData.payType == '现金'">
+                        <span class="input-group-addon">
+                            收取金额：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.sq">
+                    </div>
+                    <h5 ng-if="itemData.payType == '现金'">需要找零：[[itemData.zl]]</h5>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addJieSuan()" ng-disabled="!itemData.payType">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade huiyuan" arid-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">会员结算</h4>
+                </div>
+                <div class="modal-body center-block">
+                    <h5 class="text-center">总金额：[[itemData.oldMoney]]×[[itemData.cardDiscount]]=<span class="newMoney">[[itemData.sumMoney]]</span>元</h5>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            会员姓名：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.memberName" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            会员卡项：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.cardName" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            提成员工：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.tc_staff" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                {{#each staffs}}
+                                    <li ng-click="sendStaff('{{id}}','{{name}}')"><a href="">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            提成金额：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.tc">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <p>
+                            <span class="">
+                              支付方式：
+                            </span>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="现金"> 现金
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="刷卡"> 刷卡
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="微信"> 微信
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="itemData.payType" value="支付宝"> 支付宝
+                            </label>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group" ng-if="itemData.payType == '现金'">
+                        <span class="input-group-addon">
+                            收取金额：
+                        </span>
+                        <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.sq">
+                    </div>
+                    <h5 ng-if="itemData.payType == '现金'">需要找零：[[itemData.zl]]</h5>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click="addJieSuan()" ng-disabled="!itemData.payType">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
 {{#section 'foot'}}
     <script src="/js/index.js"></script>
 {{/section}}

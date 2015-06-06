@@ -23,3 +23,18 @@ a:hover{
     cursor: inherit;
     display: block;
 }
+#footer{
+    top:670px;
+    position: fixed;
+}
+.jsitems{
+    height:60px;
+    border-bottom:1px #e7e7e7 solid;
+    padding-top:10px;
+}
+.jsitems:hover{
+    background-color: #e7e7e7;
+}
+.newMoney{
+    font-size: 30px;
+}
