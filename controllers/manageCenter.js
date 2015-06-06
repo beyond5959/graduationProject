@@ -24,6 +24,7 @@ exports.memberManagement = memberManagement;
 exports.addMember = addMember;
 exports.deleteMember = deleteMember;
 exports.updateMember = updateMember;
+exports.financialFlow = financialFlow;
 
 function init(req, res, next){
     res.render('manager');
@@ -274,6 +275,7 @@ function addMember(req, res, next){
     var cardName = req.body.cardName;
     var applyDate = req.body.applyDate;
     var card_discount = req.body.cardDiscount;
+    var card_price = req.body.cardPrice;
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     var sql = "insert into members set ?";
     var options = {
@@ -283,6 +285,7 @@ function addMember(req, res, next){
         gender: gender,
         card_name: cardName,
         card_discount: card_discount,
+        card_price: card_price,
         apply_date: applyDate,
         consume_count: 0,
         enterprise_id: enterprise_id
@@ -316,13 +319,57 @@ function updateMember(req, res, next){
     });
 }
 
+function financialFlow(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var flows = [];
+    async.series([_queryAllMember, _queryAllJieSuan, _buildData], function(error, result){
+        if(error) return next(error);
+        res.render("m_flow", {flows: flows});
+    });
+    function _queryAllMember(callback){
+        dbDAO.queryAllJieSuan(enterprise_id, function(error, datas){
+            if (error) {
+                callback(error);
+                return;
+            }
 
-
-
-
-
-
-
-
-
-
+            _.each(datas, function(data, index){
+                var sql = "select * from jiesuan_item where jiesuan_id=?";
+                dbHelper.execSql(sql, [data.id], function(err, d){
+                    if(err){
+                        callback(err);
+                        return;
+                    }
+                    var items = _.pluck(d, "item_name");
+                    flows.push({type: "收银结算", price:data.sum_money, content:items, time: (new Date(data.pay_time)).toLocaleString().substr(0,10)});
+                });
+            });
+            callback(null);
+        });
+    }
+    function _queryAllJieSuan(callback){
+        dbDAO.queryAllMembers(enterprise_id, function(error, datas){
+            if (error) {
+                callback(error);
+                return;
+            }
+            _.each(datas, function(data, index){
+                flows.push({type: "办理会员", price: data.card_price, content: data.card_name, time: (new Date(data.apply_date)).toLocaleString().substr(0,10)});
+            });
+            callback(null);
+        });
+    }
+    function _buildData(callback){
+        flows = _.sortBy(flows,"time");
+        _.each(flows, function(flow, index){
+            flow.index = ++index
+            if(index%2==0){
+                flow.color = "active";
+            }
+            else{
+                flow.color = "default";
+            }
+        });
+        callback(null);
+    }
+}

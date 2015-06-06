@@ -31,6 +31,7 @@ module.exports = function(app){
     app.post('/manageCenter/addMember', Manager.addMember);
     app.get('/manageCenter/deleteMember/:id', Manager.deleteMember);
     app.post('/manageCenter/updateMember', Manager.updateMember);
+    app.get('/manageCenter/financialFlow', Manager.financialFlow);
 
     app.get('/appointment', Appointment.init);
     app.post('/appointment/addAppointment', Appointment.addAppointment);

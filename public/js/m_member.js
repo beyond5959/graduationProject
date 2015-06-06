@@ -9,6 +9,7 @@ app.controller("memberCtrl", function($scope,$http) {
         cardId:"",
         discount:"",
         applyDate: "",
+        cardPrice: 0.0,
         doMember:{
             id:"",
             name:"",
@@ -32,6 +33,7 @@ app.controller("memberCtrl", function($scope,$http) {
         $scope.memberData.cardName = name;
         $scope.memberData.cardId = id;
         $scope.memberData.discount = discount;
+        $scope.memberData.cardPrice = price;
         $("#money").html("需要支付<span class='text-danger'>￥" + price + "元</span>");
     };
 
@@ -69,6 +71,7 @@ app.controller("memberCtrl", function($scope,$http) {
             gender: $scope.memberData.gender,
             cardName: $scope.memberData.cardName,
             cardDiscount: $scope.memberData.discount,
+            cardPrice: $scope.memberData.cardPrice,
             applyDate: Date.parse($scope.memberData.applyDate)
         };
         $http.post("/manageCenter/addMember", options).success(function(data){

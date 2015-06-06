@@ -253,11 +253,11 @@
                         </span>
                         <input type="text" class="form-control" aria-describedby="basic-addon1" ng-model="itemData.sq">
                     </div>
-                    <h5 ng-if="itemData.payType == '现金'">需要找零：[[itemData.zl]]</h5>
+                    <h5 ng-if="itemData.payType == '现金'">需要找零：[[itemData.zl.toFixed(1)]]</h5>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="huanyuan()">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                         取消
                     </button>

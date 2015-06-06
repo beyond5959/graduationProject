@@ -26,7 +26,7 @@ app.controller("indexCtrl", function($scope,$http) {
         tc_id:"",
         sq:0,
         zl:0,
-        pMoney:""
+        oldMoney:""
     };
     $(".nav-item li:eq(0)").addClass("active");
     $scope.changeNavService = function(id, index){
@@ -68,8 +68,11 @@ app.controller("indexCtrl", function($scope,$http) {
             $(".huiyuan").modal("show");
             $scope.itemData.oldMoney = $scope.itemData.sumMoney;
             $scope.itemData.sumMoney = parseFloat($scope.itemData.oldMoney)*parseFloat($scope.itemData.cardDiscount);
-            $scope.itemData.sumMoney = $scope.itemData.sumMoney.toFixed(1);
+            $scope.itemData.sumMoney = parseFloat($scope.itemData.sumMoney.toFixed(1));
         }
+    };
+    $scope.huanyuan = function(){
+        $scope.itemData.sumMoney = $scope.itemData.oldMoney;
     };
     $scope.sendStaff = function(id,name){
         $scope.itemData.tc_staff = name;

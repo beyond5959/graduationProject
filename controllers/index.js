@@ -94,7 +94,6 @@ function addJieSuan(req, res, next){
     };
     var sql = "insert into jiesuan set ?";
     var jiesuan_item_sql = "insert into jiesuan_item set ?";
-    console.log(items);
     dbHelper.execSql(sql, options, function(err, data){
         if(err) return next(err);
         for(var i=0;i<items.length;i++){
