@@ -8,12 +8,13 @@ exports.queryAllappointment = queryAllappointment;
 exports.deleteApp = deleteApp;
 
 function init(req, res, next){
+    var shoujihao = req.session.username || "未知用户";
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     dbDAO.queryAllStaff(enterprise_id, function(err, data){
         if(err) return next(err);
         dbDAO.queryAllMembers(enterprise_id, function(error, datas){
             if(error) return next(error);
-            res.render("appointment", {staffs:data, members: datas});
+            res.render("appointment", {shoujihao: shoujihao, staffs:data, members: datas});
         });
     });
 }

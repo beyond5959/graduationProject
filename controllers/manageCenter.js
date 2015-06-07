@@ -32,11 +32,13 @@ exports.queryAllYGTC = queryAllYGTC;
 exports.queryCustomerType = queryCustomerType;
 
 function init(req, res, next){
-    res.render('manager');
+    var shoujihao = req.session.username || "未知用户";
+    res.render('manager', {shoujihao: shoujihao});
 }
 
 function itemManagement(req, res, next){
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var shoujihao = req.session.username || "未知用户";
     async.series([_queryAllServices, _queryAllItems], function(error,result){
         if(error) return next(error);
         var services = result[0];
@@ -48,7 +50,7 @@ function itemManagement(req, res, next){
             });
             services[index].hasItems = newItem;
         });
-        res.render("m_item", {cates: services});
+        res.render("m_item", {shoujihao: shoujihao, cates: services});
     });
     function _queryAllServices(callback){
         dbDAO.queryAllServices(enterprise_id, function(error, data){
@@ -148,6 +150,7 @@ function deleteItem(req, res, next){
 }
 
 function staffManagement(req, res, next){
+    var shoujihao = req.session.username || "未知用户";
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     dbDAO.queryAllStaff(enterprise_id, function(err, data){
         if(err) return next(err);
@@ -155,7 +158,7 @@ function staffManagement(req, res, next){
             d.datetime = new Date(d.join_time);
             d.join_time = new Date(parseInt(d.join_time)).toLocaleString().substr(0,10);
         });
-        res.render("m_staff", {staffs: data});
+        res.render("m_staff", {shoujihao: shoujihao, staffs: data});
     });
 }
 
@@ -196,6 +199,7 @@ function deleteStaff(req, res, next){
 }
 
 function cardManagement(req, res, next){
+    var shoujihao = req.session.username || "未知用户";
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     dbDAO.queryAllCards(enterprise_id, function(err, data){
         if(err) return next(err);
@@ -203,7 +207,7 @@ function cardManagement(req, res, next){
             d.datetime = new Date(d.expire_time);
             d.expire_time = new Date(parseInt(d.expire_time)).toLocaleString().substr(0,10);
         });
-        res.render("m_card", {cards: data});
+        res.render("m_card", {shoujihao: shoujihao, cards: data});
     });
 }
 
@@ -257,6 +261,7 @@ function updateCard(req, res, next){
 
 function memberManagement(req, res, next){
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var shoujihao = req.session.username || "未知用户";
     var card_sql = "select * from cards where ?";
     var member_sql = "select * from members where ?";
     dbHelper.execSql(card_sql, {enterprise_id: enterprise_id}, function(err, data){
@@ -267,7 +272,7 @@ function memberManagement(req, res, next){
                 d.datetime = new Date(d.apply_date);
                 d.apply_date = new Date(parseInt(d.apply_date)).toLocaleString().substr(0,10);
             });
-            res.render("m_member", {cards: data, members: datas});
+            res.render("m_member", {shoujihao: shoujihao,cards: data, members: datas});
         });
     });
 }
@@ -327,9 +332,10 @@ function updateMember(req, res, next){
 function financialFlow(req, res, next){
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     var flows = [];
+    var shoujihao = req.session.username || "未知用户";
     async.series([_queryAllMember, _queryAllJieSuan, _buildData], function(error, result){
         if(error) return next(error);
-        res.render("m_flow", {flows: flows});
+        res.render("m_flow", {shoujihao: shoujihao,flows: flows});
     });
     function _queryAllMember(callback){
         dbDAO.queryAllJieSuan(enterprise_id, function(error, datas){
@@ -346,10 +352,13 @@ function financialFlow(req, res, next){
                         return;
                     }
                     var items = _.pluck(d, "item_name");
-                    flows.push({type: "收银结算", price:data.sum_money, content:items, time: (new Date(data.pay_time)).toLocaleString().substr(0,10)});
+                    flows.push({type: "收银结算", price:data.sum_money, content:items, time: data.pay_time});
+                    if(index == (datas.length-1)){
+                        callback(null);
+                        return;
+                    }
                 });
             });
-            callback(null);
         });
     }
     function _queryAllJieSuan(callback){
@@ -359,28 +368,37 @@ function financialFlow(req, res, next){
                 return;
             }
             _.each(datas, function(data, index){
-                flows.push({type: "办理会员", price: data.card_price, content: data.card_name, time: (new Date(data.apply_date)).toLocaleString().substr(0,10)});
+                flows.push({type: "办理会员", price: data.card_price, content: data.card_name, time: data.apply_date});
+                if(index == (datas.length-1)){
+                    callback(null);
+                    return;
+                }
             });
-            callback(null);
         });
     }
     function _buildData(callback){
         flows = _.sortBy(flows,"time");
+        flows = flows.reverse();
         _.each(flows, function(flow, index){
             flow.index = ++index;
+            flow.time = new Date(flow.time).toLocaleString();//substr(0,10);
             if(index%2==0){
                 flow.color = "active";
             }
             else{
                 flow.color = "default";
             }
+            if(index == (flows.length-1)){
+                callback(null);
+                return;
+            }
         });
-        callback(null);
     }
 }
 
 function analysis(req, res, next){
-    res.render("m_analysis",{layout:null});
+    var shoujihao = req.session.username || "未知用户";
+    res.render("m_analysis",{shoujihao: shoujihao, layout: null});
 }
 function queryAllJieSuanItem(req, res, next){
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";

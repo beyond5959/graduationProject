@@ -9,6 +9,7 @@ exports.getItemsByServiceId = getItemsByServiceId;
 exports.addJieSuan = addJieSuan;
 
 function index(req, res, next){
+    var shoujihao = req.session.username || "未知用户";
     var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
     async.series([_queryAllServices, _queryAllItems, _queryAllMembers, _queryAllStaff], function(error,result){
         if(error) return next(error);
@@ -21,8 +22,7 @@ function index(req, res, next){
             });
             services[index].hasItems = newItem;
         });
-        console.log(result[2]);
-        res.render("index", {cates: services, items:services[0].hasItems, members:result[2], staffs:result[3]});
+        res.render("index", {shoujihao: shoujihao, cates: services, items:services[0].hasItems, members:result[2], staffs:result[3]});
     });
     function _queryAllServices(callback){
         dbDAO.queryAllServices(enterprise_id, function(error, data){

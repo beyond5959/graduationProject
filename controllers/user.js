@@ -6,6 +6,7 @@ var SALT_WORK_FACTOR = 10;
 
 exports.signin = signin;
 exports.signup = signup;
+exports.loginout = loginout;
 exports.signinRequired = signinRequired;
 
 function signin(req, res, next){
@@ -23,6 +24,7 @@ function signin(req, res, next){
                     if(err) return next(err);
                     if(isMatch) {
                         req.session.enterprise_id = result[0].id;
+                        req.session.username = username;
                         return res.redirect(303, '/');
                     }else{
                         res.render('signin', {signinError: '密码错误'});
@@ -44,6 +46,7 @@ function signup(req, res, next){
         async.series([_encrypt, _execSql], function(err, results){
             if(err) return next(err);
             req.session.enterprise_id = id;
+            req.session.username = username;
             return res.redirect(303, '/');
         });
 
@@ -78,8 +81,15 @@ function signup(req, res, next){
     }
 }
 
+function loginout(req, res, next){
+    req.session.destroy(function (err) {
+        if(err) console.log("session销毁失败.");
+        else console.log("session被销毁.");
+    });
+    return res.redirect(303, '/signin');
+}
 function signinRequired(req, res, next){
-    var user = req.session.user;
+    var user = req.session.enterprise_id;
 
     if(!user){
         return res.redirect(303,'/signin');
