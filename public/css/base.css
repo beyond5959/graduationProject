@@ -38,3 +38,23 @@ a:hover{
 .newMoney{
     font-size: 30px;
 }
+#a_payType{
+    float: left;
+    margin-left: 300px;
+}
+#xianjin{
+    border-left: 20px #E0E4CC solid;
+    margin-top: 10px;
+}
+#shuaka{
+    border-left: 20px #F7464A solid;
+    margin-top: 10px;
+}
+#alipay{
+    border-left: 20px #69D2E7 solid;
+    margin-top: 10px;
+}
+#weixin{
+    border-left: 20px #4D5360 solid;
+    margin-top: 10px;
+}

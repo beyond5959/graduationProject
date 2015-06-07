@@ -1,0 +1,93 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>美业管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/favicon.ico" rel="icon">
+    <link href="/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <script src="/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/js/modernizr.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">XXXXX管理系统</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">收银</a></li>
+                <li><a href="/appointment">预约</a></li>
+                <li><a href="/manageCenter">管理台</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Hello! niuniu. <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        管理台 > 经营分析
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div role="tabpanel">
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a  id="itemss" href="#home" aria-controls="home" role="tab" data-toggle="tab">经营项目</a></li>
+                            <li role="presentation"><a  id="ygtc" href="#profile" aria-controls="profile" role="tab" data-toggle="tab">员工提成</a></li>
+                            <li role="presentation"><a id="c_type" href="#messages" aria-controls="messages" role="tab" data-toggle="tab">顾客类型</a></li>
+                            <li role="presentation"><a id="payType" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">支付方式</a></li>
+                        </ul>
+                        <br>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="home">
+                                <canvas id="myChart" width="1000" height="400"></canvas>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="profile">
+                                <canvas id="tcChart" width="1000" height="400"></canvas>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="messages">
+                                <div id="a_payType">
+                                    <canvas id="c_pieChartCanvas" width="449" height="300"></canvas>
+                                    <div id="shuaka">：散客</div>
+                                    <div id="alipay">：会员</div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="settings">
+                                <div id="a_payType">
+                                    <canvas id="pieChartCanvas" width="449" height="300"></canvas>
+                                    <div id="xianjin">：现金</div>
+                                    <div id="shuaka">：刷卡</div>
+                                    <div id="alipay">：支付宝</div>
+                                    <div id="weixin">：微信</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="/libs/chartjs/Chart.min.js"></script>
+<script src="/js/m_analysis.js"></script>
+</body>
+</html>
+

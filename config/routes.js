@@ -32,6 +32,11 @@ module.exports = function(app){
     app.get('/manageCenter/deleteMember/:id', Manager.deleteMember);
     app.post('/manageCenter/updateMember', Manager.updateMember);
     app.get('/manageCenter/financialFlow', Manager.financialFlow);
+    app.get('/manageCenter/analysis', Manager.analysis);
+    app.get('/manageCenter/queryAllJieSuanItem', Manager.queryAllJieSuanItem);
+    app.get('/manageCenter/queryAllPayType', Manager.queryAllPayType);
+    app.get('/manageCenter/queryAllYGTC', Manager.queryAllYGTC);
+    app.get('/manageCenter/queryCustomerType', Manager.queryCustomerType);
 
     app.get('/appointment', Appointment.init);
     app.post('/appointment/addAppointment', Appointment.addAppointment);

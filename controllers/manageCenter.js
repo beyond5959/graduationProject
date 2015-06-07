@@ -25,6 +25,11 @@ exports.addMember = addMember;
 exports.deleteMember = deleteMember;
 exports.updateMember = updateMember;
 exports.financialFlow = financialFlow;
+exports.analysis = analysis;
+exports.queryAllJieSuanItem = queryAllJieSuanItem;
+exports.queryAllPayType = queryAllPayType;
+exports.queryAllYGTC = queryAllYGTC;
+exports.queryCustomerType = queryCustomerType;
 
 function init(req, res, next){
     res.render('manager');
@@ -362,7 +367,7 @@ function financialFlow(req, res, next){
     function _buildData(callback){
         flows = _.sortBy(flows,"time");
         _.each(flows, function(flow, index){
-            flow.index = ++index
+            flow.index = ++index;
             if(index%2==0){
                 flow.color = "active";
             }
@@ -372,4 +377,62 @@ function financialFlow(req, res, next){
         });
         callback(null);
     }
+}
+
+function analysis(req, res, next){
+    res.render("m_analysis",{layout:null});
+}
+function queryAllJieSuanItem(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "select count(item_name) as counts ,item_name from jiesuan_item where enterprise_id=? group by item_id";
+    dbHelper.execSql(sql, [enterprise_id], function(err, data){
+        if(err) return next(err);
+        var counts = _.pluck(data, "counts");
+        var names = _.pluck(data, "item_name");
+        res.json({code:0, result:{counts:counts, names:names}});
+    });
+}
+
+function queryAllPayType(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "select count(*) as counts ,pay_type from jiesuan where enterprise_id=? group by pay_type";
+    var results = [];
+    var colors = ["#F7464A", "#4D5360", "#69D2E7", "#E0E4CC"];
+    dbHelper.execSql(sql, [enterprise_id], function(err, data){
+        if(err) return next(err);
+        var counts = _.pluck(data, "counts");
+        var names = _.pluck(data, "pay_type");
+        for(var i=0;i<counts.length;i++){
+            results.push({value:counts[i],color:colors[i],label:names[i]});
+        }
+        res.json({code:0, result:results});
+    });
+}
+
+function queryAllYGTC(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "select staff_name, sum(tc_money) as money from jiesuan where enterprise_id=? group by staff_id";
+    dbHelper.execSql(sql, [enterprise_id], function(err, data){
+        if(err) return next(err);
+        var amount = _.pluck(data, "money");
+        var names = _.pluck(data, "staff_name");
+        res.json({code:0, result:{amount: amount,names:names}});
+    })
+
+}
+
+function queryCustomerType(req, res, next){
+    var enterprise_id = req.session.enterprise_id || "1061da40-f155-11e4-ae55-173d1f3c";
+    var sql = "select count(*) as counts ,type from jiesuan where enterprise_id=? group by type";
+    var results = [];
+    var colors = ["#69D2E7", "#F7464A"];
+    dbHelper.execSql(sql, [enterprise_id], function(err, data){
+        if(err) return next(err);
+        var counts = _.pluck(data, "counts");
+        var names = _.pluck(data, "type");
+        for(var i=0;i<counts.length;i++){
+            results.push({value:counts[i],color:colors[i],label:names[i]});
+        }
+        res.json({code:0, result:results});
+    });
 }
