@@ -2,3 +2,5 @@ node_modules
 .idea/*
 public/libs
 public/uploads
+.svn/*
+build.sh
